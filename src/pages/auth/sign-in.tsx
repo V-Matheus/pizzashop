@@ -1,5 +1,5 @@
 export function SigIn() {
   return <h1>
-    SigIn
+    SignIn
   </h1>
 }
