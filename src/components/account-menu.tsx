@@ -1,8 +1,28 @@
 import { Building, ChevronDown, LogOut } from 'lucide-react';
 import { Button } from './ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from './ui/dropdown-menu';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from './ui/dropdown-menu';
+import { useQuery } from '@tanstack/react-query';
+import { getProfile } from '@/api/get-profile';
+import { getManagedRestaurant } from '@/api/get-managed-restaurant';
 
 export function AccontMenu() {
+  const { data: profile } = useQuery({
+    queryKey: ['profile'],
+    queryFn: getProfile,
+  });
+  
+  const { data: managedRestaurant } = useQuery({
+    queryKey: ['managed-restaurant'],
+    queryFn: getManagedRestaurant,
+  });
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -10,28 +30,29 @@ export function AccontMenu() {
           variant="outline"
           className="flex items-center gap-2 select-none"
         >
-          Pizza Shop
+          {managedRestaurant?.name}
           <ChevronDown className="w-4 h-4" />
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent align='end' className='w-56'>
-        <DropdownMenuLabel className='flex flex-col'>
+      <DropdownMenuContent align="end" className="w-56">
+        <DropdownMenuLabel className="flex flex-col">
           <span>Victor Matheus</span>
-          <span className='text-xs font-normal text-muted-foreground'>victormatheus507@gmail.com</span>
+          <span className="text-xs font-normal text-muted-foreground">
+            {profile?.email}
+          </span>
         </DropdownMenuLabel>
-        <DropdownMenuSeparator/>
-          <DropdownMenuItem>
-            <Building className='w-4 h-4 mr-2'/>
-            <span>Perfil da loja</span>
-          </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem>
+          <Building className="w-4 h-4 mr-2" />
+          <span>{profile?.name}</span>
+        </DropdownMenuItem>
 
-          <DropdownMenuItem className='text-rose-500 dark:text-rose-400'>
-            <LogOut className='w-4 h-4 mr-2'/>
-            <span>Sair</span>
-          </DropdownMenuItem>
+        <DropdownMenuItem className="text-rose-500 dark:text-rose-400">
+          <LogOut className="w-4 h-4 mr-2" />
+          <span>Sair</span>
+        </DropdownMenuItem>
       </DropdownMenuContent>
-
     </DropdownMenu>
   );
 }
